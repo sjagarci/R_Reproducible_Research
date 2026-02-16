@@ -32,6 +32,12 @@ setwd("data") # sets the working directory to the data folder
 
 getwd() # updated working directory now points to data folder 
 
+# NOTES: 02/05/2026 
+# Importing data 
+library(readr)
+gapminder_data <- read.csv("data/gapminder_data.csv")
+
+
 # SUPPLEMENTAL: USING GIT FROM RSTUDIO
 # Confirmed that RStudio has been linked to GitHub
 # Will check to see whether or not this appears on GitHub
