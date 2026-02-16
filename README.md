@@ -51,17 +51,16 @@ skills.
    through lessons. 
    
 ## Directory Structure
--data/        # Example datasets used in the lessons
--doc/         # Scripts and lesson-based R code
--results/     # Output graphics and figures
--src/         # TBD
--.gitignore
--R_Reproducible_Research.Rproj
+- data/        # Example datasets used in the lessons
+- doc/         # Scripts and lesson-based R code
+- results/     # Output graphics and figures
+- src/         # TBD
+- .gitignore
+- R_Reproducible_Research.Rproj
 
 Notes
--This repository is for training and reference; it is NOT part of an official 
-Software Carpentry release.
--Materials in this lesson are licensed under the Carpentries’ CC-BY license.
--The focus of the lesson is on teaching core R concepts and reproducible 
-workflows — not on statistical modeling.
+This repository is for training and reference; it is NOT part of an official 
+Software Carpentry release. Materials in this lesson are licensed under the 
+Carpentries’ CC-BY license.The focus of the lesson is on teaching core R concepts 
+and reproducible workflows — not on statistical modeling.
 
