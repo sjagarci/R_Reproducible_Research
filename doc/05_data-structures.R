@@ -1,8 +1,8 @@
 # Title:  Data Structures
 # Author: Stephanie J. Garcia
-# Date:   Feb 16, 2026
+# Date:   Feb 16-18, 2026
 
-## R's most powerful features is its ability to deal with tabular data
+# R's most powerful features is its ability to deal with tabular data
 ## Example dataset (cats) -- will create this data frame to save as csv file
 
 cats <- data.frame(coat = c("calico", "black", "tabby"),
@@ -14,7 +14,7 @@ write.csv(x = cats, file = "data/feline-data.csv", row.names = FALSE)
 
 head(cats) #review of cats data just created
 
-## Loading data into environmental using read.csv from data folder
+## Loading data into environment using read.csv from data folder
 
 cats <- read.csv(file = "data/feline-data.csv")
 cats
@@ -22,7 +22,7 @@ cats
 ## Checking data types in cats data
 str(cats)
 
-## Exploring dataset pulling out columns usingt the '$' operator
+## Exploring dataset pulling out columns using the '$' operator
 cats$weight
 cats$coat
 
@@ -99,7 +99,7 @@ character_vector_example # character
 character_coerced_to_double <- as.double(character_vector_example) #transform to numeric
 character_coerced_to_double # numeric
 double_coerced_to_logical <- as.logical(character_coerced_to_double)
-double_coerced_to_logical
+double_coerced_to_logical # logical
 
 ## A case where coercion is useful
 cats$likes_catnip # numeric
@@ -131,33 +131,33 @@ cats$likes_catnip
   ##    Calculate the mean to test yourself
         mean(cats2$weight)
         
-# Some basic vector functions
-  ## combine function c() can append things to vectors
+## Some basic vector functions
+  ### combine function c() can append things to vectors
      ab_vector <- c('a', 'b')
      ab_vector
      
      combine_example <- c(ab_vector, 'SWC')
      combine_example
   
-  ## Series of numbers 
+  ### Series of numbers 
      mySeries <- 1:10
      mySeries
      
      seq(10) # also makes a series of numbers 1 - 10
      seq(1,10, by=0.1)
      
-  ## Ask questions to vectors 
+  ### Ask questions to vectors 
      sequence_example <- 20:25 # series of numbers 20 - 25
      head(sequence_example, n = 2) # the first two elements in seq 20 - 25
      tail(sequence_example, n = 4) # the last four elements in seq 20 - 25
      length(sequence_example) # total number of elements in 20 - 25
      typeof(sequence_example) # provide data type - integer
      
-     ## obtain individual elements of a vector using bracket notation
+     ### obtain individual elements of a vector using bracket notation
      first_element <- sequence_example[1]
      first_element # first element of sequence 20 - 25
      
-     ## change a single element using a bracket on the other side of arrow
+     ### change a single element using a bracket on the other side of arrow
      sequence_example[1] <- 30 # replace 20 with 30
      sequence_example
      
@@ -251,5 +251,27 @@ cats$likes_catnip
    names(cats)[2] <- "weight_kg"
    cats
   
+# MATRICES
+  matrix_example <- matrix(0, ncol=6, nrow=3) # ncol & nrow can be switched
+  matrix_example
   
+  matrix_ex1 <- matrix(0, nrow = 3, ncol = 6)
+  matrix_ex1
+  
+  dim(matrix_example) # gives row x column dimension of matrix 
+  typeof(matrix_example) # double/numeric
+  class(matrix_example) # noted as a matrix or array
+  str(matrix_example) #seq of 0's, 3 rows, 6 columns
+  nrow(matrix_example) # 3 rows identified
+  ncol(matrix_example) # 6 columns identified
+  
+## Challenge 6: What will the result of length(matrix_example)? 18? YAY!
+   length(matrix_example) # 18 total number of elements in the matrix
+   
+## Challenge 7: Create a matrix with number 1:50, with 5 columns, and 10 rows
+   matrix_c7 <- matrix(1:50, nrow = 10, ncol = 5)
+   matrix_c7 # by default elements are filled by column
+   ### modify matrix fill by using byrow = TRUE option
+   x <- matrix(1:50, nrow = 10, ncol = 5, byrow = TRUE) # fill by row
+   x
 
