@@ -181,10 +181,75 @@ cats$likes_catnip
   another_list
   another_list$title # we have another way to retrieve elements from a named list
   
-# NAMES: give meaning to elements 
-  ## we can also make a named vector
-  
-  
-  
+# NAMES: give meaning to objects -- metadata (label on an object)
+  ## Accessing vectors by lists and names == named list & named vector
+  ## Retrieving info is different in named vectors 
+     pizza_price <- c(pizzasubito = 5.64, pizzafresh = 6.60, callapizza = 4.50)
+     pizza_price["pizzasubito"] #Note that for lists and names we use brackets
+     ### Approach used for lists, does not work for vectors 
+     ### you have just tried accessing an element like it was in a list, 
+     ###     but it is actually in a vector
+             #### pizza_price$pizzafresh 
+             #### ERROR: Error in pizza_price$pizzafresh : 
+             ####        $ operator is invalid for atomic vectors
+  ## Accessing and changing names -- use names() function
+     names(pizza_price)
      
+     ## we can access and change single elements like vectors
+        names(pizza_price)[3]
+        names(pizza_price)[3] <- "call-a-pizza"
+        pizza_price
+        
+## Challenge 3: What is the data type of the names of pizza_price? 
+   str(pizza_price) #recall that you can also use typeof(); I prefer str()
+   typeof(pizza_price) # gives double/numeric
+   typeof(names(pizza_price)) # names assigned to pizza price are character
+   
+## Challenge 4: Create a vector that gives the number for each letter in the alphabet!
+   ### Note: names (OBJECT ) <- CHARACTER_VECTOR; replace OBJECT
+   letter_no <- 1:26 # you can also use seq(1,26)
+   names(letter_no) <- LETTERS #Built-in constants in R 
+   letter_no["B"] # gives 2 as expected
+   letter_no["S"] # gives 19 as expected
+   
+# DATA FRAMES -- represent a table of data; a specialized list of vectors
+  cats # a table with 3 obs from 3 variables
+  typeof(cats) # considered a list! recall a list organizes data of diff types
+  class(cats) # written in R as a "data frame" (i.e., a table!)
+  # class() identify meaning for the object (recognized as a data frame)
+  # typeof() tells how the object is constructed in the computer -- i.e., list
+  # Further -- class() is extendable in R, typeof() is fixed in R
+  
+  cats$coat
+  cats[,1] # elements of first column (coats)
+  typeof(cats[,1]) # character data type
+  str(cats[,1]) # character variable with 3 entries 
+  cats[1,] # element of first row 
+  typeof(cats[1,]) # list (recall a list can include data of diff types)
+  str(cats[1,]) # recognized as data frame, 1 obs with 3 variables
+  
+## Challenge 5: Review different ways to call variables, obs, and elements 
+##              from data frames. Try these examples and use typeof() to examine
+  
+  cats[1] # returns the first vector in cats data frame
+  typeof(cats[1]) # list 
+  cats[[1]] # returns the contents of the list item
+  typeof(cats[[1]]) # vector of type character
+  cats$coat # returns elements of coat variable
+  typeof(cats$coat) # character vector
+  cats["coat"] # use a single brace to represent index number with column name
+  typeof(cats["coat"]) # list
+  ### use of single brace to provide row and column coordinates
+  cats[1,1] # returns object in row 1, column 1 (i,e, "calico")
+  cats[, 1] # returns all objects in column 1 as a VECTOR (same data type)
+  cats[1, ] # returns all objects in row 1 as a LIST (diff data type)
+  
+## Renaming data frames 
+   ## use names() function to find column names
+   names(cats)
+   ## rename second column to weight_kg
+   names(cats)[2] <- "weight_kg"
+   cats
+  
+  
 
