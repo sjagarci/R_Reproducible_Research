@@ -275,3 +275,20 @@ cats$likes_catnip
    x <- matrix(1:50, nrow = 10, ncol = 5, byrow = TRUE) # fill by row
    x
 
+## Challenge 8: Create a list of length two containing a character vector of the
+## sections in this workshop: Data Types (5 types) and Data Structures 
+## Populate each character vector with the names of the two vectors
+   data_types <- c('double', 'integer', 'complex', 'logical', 'character')
+   data_structures <- c('data.frame', 'vector', 'list', 'matrix')
+   list_data_type_str <- list(data_types, data_structures)
+   str(list_data_type_str)
+   
+## Challenge 9: What is the correct command to write the provided matrix? 
+   matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE) # correct
+   matrix(c(4, 1, 9, 5, 10, 7), nrow = 3) 
+   # produces 3 rows, ordered by the first 3 values, and then the next 3 
+   matrix(c(4, 9, 10, 1, 5, 7), ncol = 2, byrow = TRUE)
+   # produces 3 rows ordered by first 2, and then the next 2
+   matrix(c(4, 9, 10, 1, 5, 7), nrow = 2)
+   # produces 3 columns of 2 ordered by first 2 and then the next 2 and so on
+   
