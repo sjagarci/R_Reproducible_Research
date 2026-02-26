@@ -125,5 +125,5 @@ str(gapminder_data)
 ###  character strings: country, continent, life expectancy, GPD per capital
 ###  integer vector: year 
 ###  numeric vectors: population, life expectancy, GPD per capital
-colnames(gapminder_data) # lists the variables in gapminder dataset
+colnames(gapminder_data) # lists the column names "variables" in gapminder data
 dim(gapminder_data) #1704 rows, 6 columns 
