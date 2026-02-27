@@ -5,6 +5,15 @@
 #install.packages("tidyverse") # includes the dplyr package
 library(tidyverse) 
 # loads dplyr, readr, forcats, purrr, tibble, tidyr, lubridate, ggplot2, stringr
+??dplyr
+??readr
+??forcats
+??purrr
+??tibble
+??tidyr
+??lubridate
+??ggplot2
+??stringr
 
 #install.packages("gapminder")
 library(gapminder)
@@ -101,6 +110,42 @@ lifeExp_by_country %>%
 lifeExp_by_country %>% 
   arrange(desc(country)) %>% 
   head(1) # Zimbabwe displayed 
+
+### The function group_by() allows us to group by multiple variables. 
+### Let’s group by year and continent
+gdp_bycontinents_byyear <- gapminder %>% 
+  group_by(year, continent) %>% 
+  summarize(mean_gdpPercap = mean(gdpPercap))
+gdp_bycontinents_byyear # 60 observations 
+print(gdp_bycontinents_byyear, n=60) #prints content of all 60 observations
+
+### define more than 1 variable using summarize()
+gdp_pop_bycontinents_byyear <- gapminder %>% 
+  group_by(year, continent) %>% 
+  summarize (mean_gdpPercap = mean(gdpPercap),
+             sd_gdpPercap = sd(gdpPercap),
+             mean_pop = mean(pop), 
+             sd_pop = sd(pop))
+print(gdp_pop_bycontinents_byyear, n=60)
+
+## count(): count the number of observations for each group
+count_continent_2002 <- gapminder %>% 
+  filter(year == 2002) %>% 
+  count(continent, sort = TRUE)
+print(count_continent_2002, sort = TRUE)
+
+count_continent_year <- gapminder %>% 
+  group_by(year) %>% 
+  count(continent, sort = TRUE)
+print(count_continent_year, n = 60) #12 years across 5 continents = 60 rows
+
+## using n(): number of observations for calculations
+## obtain standard error of lifeExp per continent 
+sd_lifeExp_continent <- gapminder %>% 
+  group_by(continent) %>% 
+  summarize(se_le = sd(lifeExp)/sqrt(n()))
+sd_lifeExp_continent
+
 
 
 
