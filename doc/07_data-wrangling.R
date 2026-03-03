@@ -23,7 +23,7 @@ mean(gapminder$gdpPercap[gapminder$continent == "Americas"]) # 7136.11
 mean(gapminder$gdpPercap[gapminder$continent == "Asia"]) # 7902.15 
 ## lots of repetition 
 
-# Using dplyr function: combining several functions using pipes 
+# Using dplyr function: combining several functions using pipes %>% 
 ## select(), filter(), group_by(), summarize(), mutate()
 
 ## select(): select a few variables from a data frame
@@ -300,7 +300,58 @@ print(avg_lifeExp_rando_2countries)
 ### summarize() reduces multiple values down to a single summary.
 ### arrange() changes the ordering of the rows.
 
+# NOTES FROM VIDEO LECTURE 2026-03-03 
+# install.packages("magick", type = "binary")
+library(magick)
+?magick
 
+## Verify if it is 'magick' is working. 
+## Read a sample image from the web
+scientist <- image_read("https://jeroen.github.io/images/frink.png")
+# Display it in your RStudio viewer
+print(scientist)
 
+# Using select()
+## used to select or keep few variable/column
+?select()
 
+head(gapminder) #6 variables: country, continent, year, lifeExp, pop, gdpPercap
 
+## keep country, year, pop, and lifeExp from gapminder
+gapminder_keep <- select(gapminder, country, year, pop, lifeExp)
+gapminder_keep
+
+## drop columns from gapminder 
+gapminder_drop <- select(gapminder, -country, -year, -pop, -lifeExp)
+gapminder_drop
+
+## what to do when you do not know the column names, refer to "additions"
+?select() #starts_with(), ends_with(), contains()
+
+# rename function: give new names to columns 
+## syntax: rename(new_name = old_name)
+rename_gdp <- gapminder %>% 
+  select(year, country, gdpPercap) %>% 
+  rename(GDP = gdpPercap)
+
+rename_gdp
+
+rename_all <- gapminder %>% 
+  select(year, country, gdpPercap) %>% 
+  rename(GDP = gdpPercap, Year = year, Nation = country)
+rename_all
+
+# How many rows are there in each continent 
+table(gapminder$continent) # 1704 total
+
+# Add more than 1 filter
+gapminder %>% 
+  select(year, continent, country, gdpPercap) %>% 
+  filter(continent == "Europe", year == 2002)
+
+install.packages("conflicted")
+library(conflicted)
+library(dplyr) # similar functions used
+library(stats) # similar functions used
+# Declare which package wins for specific functionsconflicts_prefer(dplyr::filter)
+# conflicts_prefer(dplyr::lag)
