@@ -111,8 +111,8 @@ lifeExp_by_country %>%
   arrange(desc(country)) %>% 
   head(1) # Zimbabwe displayed 
 
-### The function group_by() allows us to group by multiple variables. 
-### Let’s group by year and continent
+# The function group_by() allows us to group by multiple variables. 
+## Let’s group by year and continent
 gdp_bycontinents_byyear <- gapminder %>% 
   group_by(year, continent) %>% 
   summarize(mean_gdpPercap = mean(gdpPercap))
@@ -128,7 +128,7 @@ gdp_pop_bycontinents_byyear <- gapminder %>%
              sd_pop = sd(pop))
 print(gdp_pop_bycontinents_byyear, n=60)
 
-## count(): count the number of observations for each group
+# count(): count the number of observations for each group
 count_continent_2002 <- gapminder %>% 
   filter(year == 2002) %>% 
   count(continent, sort = TRUE)
@@ -140,12 +140,165 @@ count_continent_year <- gapminder %>%
 print(count_continent_year, n = 60) #12 years across 5 continents = 60 rows
 
 ## using n(): number of observations for calculations
-## obtain standard error of lifeExp per continent 
-sd_lifeExp_continent <- gapminder %>% 
+### obtain standard error of lifeExp per continent 
+se_lifeExp_continent <- gapminder %>% 
   group_by(continent) %>% 
   summarize(se_le = sd(lifeExp)/sqrt(n()))
-sd_lifeExp_continent
+se_lifeExp_continent
 
+## chain together several summary operations
+### calculate the min, max, mean, and se of each continents' life expectancy
+lifeExp_continent_stats <- gapminder %>% 
+  group_by(continent) %>% 
+  summarize(mean_lifeExp = mean(lifeExp), 
+            min_lifeExp = min(lifeExp),
+            max_lifeExp = max(lifeExp), 
+            se_lifeExp = sd(lifeExp)/sqrt(n()))
+lifeExp_continent_stats
+
+# mutate(): create new variables prior to (or even after) summarizing info 
+gdp_pop_bycontinents_byyear <- gapminder %>% 
+  mutate(gdp_billion = gdpPercap*pop/10^9) %>% 
+  group_by(continent, year) %>% 
+  summarize(mean_gdpPercap = mean(gdpPercap),
+            sd_gdpPercap = sd(gdpPercap),
+            mean_pop = mean(pop),
+            sd_pop = sd(pop), 
+            mean_gdp_billion = mean(gdp_billion),
+            sd_gdp_billion = sd(gdp_billion))
+gdp_pop_bycontinents_byyear
+
+## connect mutate with logical filtering: ifelse
+#### keeping all data but "filtering" after a certain condition 
+### calculate GDP only for people with a life expectation above 25
+??ifelse
+gdp_pop_bycontinents_byyear_above25 <- gapminder %>% 
+  mutate(gdp_billion = ifelse(lifeExp > 25, gdpPercap * pop / 10^9, NA)) %>% 
+  group_by(continent, year) %>% 
+  summarize(mean_gdpPercap = mean(gdpPercap),
+            sd_gdpPercap = sd(gdpPercap),
+            mean_pop = mean(pop),
+            sd_pop = sd(pop),
+            mean_gdp_billion = mean(gdp_billion),
+            sd_gdp_billion = sd(gdp_billion))
+gdp_pop_bycontinents_byyear_above25
+
+summary(gdp_pop_bycontinents_byyear_above25)
+print("Position of missing values by column wise")
+sapply(gdp_pop_bycontinents_byyear_above25, function(x) which(is.na(x)))
+
+print("Count of missing values by column wise")
+sapply(gdp_pop_bycontinents_byyear_above25, function(x) sum(is.na(x)))
+
+### report number of NULL values in newly created variable
+#miss_gdp_pop_bycontinents_byyear_above25 %>% 
+#  summarize(across(everything(), ~ sum(is.na(.)), .names = "missing_{.col}")) %>% 
+#  pivot_longer(cols = everything(),
+#               names_to = "column",
+#               values_to = "missing_count")
+#miss_gdp_pop_bycontinents_byyear_above25
+
+### update only if certain condition is fulfilled
+## life expectation above 40 years, the gdp to be expected in the future is scaled
+gdp_pop_bycontinents_high_lifeExp <- gapminder %>% 
+  mutate(gdp_futureExpectation = ifelse(lifeExp > 40, gdpPercap * 1.5, gdpPercap)) %>% 
+  group_by(continent, year) %>% 
+  summarize(mean_gdpPercap = mean(gdpPercap),
+            mean_gdpPercap_expected = mean(gdp_futureExpectation))
+gdp_pop_bycontinents_high_lifeExp
+
+# combining dplyr and ggplot2
+#install.packages("ggplot2") #install if necessary
+library(ggplot2)
+
+## Filter countries located in the Americas (old code)
+### requires the need to create an intermediate variable (americas)
+americas <- gapminder[gapminder$continent == "Americas",]
+# Make the plot 
+ggplot(data = americas, mapping = aes(x = year, y = lifeExp)) + 
+  geom_line() + 
+  facet_wrap( ~ country) +
+  theme(axis.text.x = element_text(angle = 45))
+
+## let's look an update to the code where we combine dplyr and ggplot
+gapminder %>% 
+  #Filter countries located in the Americas
+  filter(continent == "Americas") %>% 
+  #Make the plot
+  ggplot(mapping = aes(x = year, y = lifeExp)) +
+  geom_line() +
+  facet_wrap( ~ country) + 
+  theme(axis.text.x = element_text(angle = 45))
+
+# mutate() and ggplot2 package using base R startsWith
+gapminder %>% 
+  #extract first letter of country name into new column 
+  mutate(startsWith = substr(country, 1, 1)) %>% 
+  #only keep countries starting with A or Z 
+  filter(startsWith %in% c("A", "Z")) %>% 
+  #plot lifeExp into facets
+  ggplot(aes(x = year, y = lifeExp, colour = continent)) +
+  geom_line() + 
+  facet_wrap(vars(country)) + 
+  theme_minimal()
+
+## mutate() and ggplot2 package using dplyr starts_with
+AZ_lifeExp <- gapminder %>% 
+  #extract first letter of country name into new column 
+  mutate(starts_with = substr(country, 1, 1)) %>% 
+  #only keep countries starting with A or Z 
+  filter(starts_with %in% c("A", "Z")) %>% 
+  #plot lifeExp into facets
+  ggplot(aes(x = year, y = lifeExp, colour = continent)) +
+  geom_line() + 
+  ggtitle("Life Expectancy for 'A & Z' Countries across all Continents") + 
+  facet_wrap(vars(country)) + 
+  theme_minimal()
+AZ_lifeExp
+
+# ADVANCED CHALLENGE: Calculate the average life expectancy in 2022 of 2 randomly
+#                     selected countries for each continent. Then arrange the 
+#                     continent names in reverse order. HINT: Use the dplyr 
+#                     functions arrange() and sample_n(), they have similar 
+#                     syntax to other dplyr functions. 
+??arrange() #a function used for ordering
+??sample_n() #a function used for sampling 
+??slice_sample()
+
+avg_lifeExp_rando_countries <- gapminder %>% 
+  filter(year == 2002) %>% #keep 2002 data only
+  group_by(continent) %>% #group by continent
+  slice_sample(n = 2) %>% #slice_sample supersedes sample_n() function 
+  summarize(mean_avg_lifeExp_rando_countries = mean(lifeExp)) %>% 
+  arrange(desc(mean_avg_lifeExp_rando_countries))
+avg_lifeExp_rando_countries
+
+### Another method: identify which random country was sample (3 parts)
+# Step 0: Set a seed to ensure reproducibility 
+set.seed(123) 
+
+# Step 1: Sample 2 countries per continent for 2002
+sampled_countries <- gapminder %>%
+  filter(year == 2002) %>%       # Keep only 2002 data
+  group_by(continent) %>%        # Group by continent
+  slice_sample(n = 2)            # Randomly select 2 rows per continent
+
+# View the sampled countries
+print(sampled_countries)
+
+# Step 2: Then calculate the mean life expectancy
+avg_lifeExp_rando_2countries <- sampled_countries %>%
+  summarize(mean_avg_lifeExp_rando_2countries = mean(lifeExp)) %>%
+  arrange(desc(mean_avg_lifeExp_rando_2countries))
+
+print(avg_lifeExp_rando_2countries)
+  
+### Summary 
+### mutate() adds new variables that are functions of existing variables
+### select() picks variables based on their names.
+### filter() picks cases based on their values.
+### summarize() reduces multiple values down to a single summary.
+### arrange() changes the ordering of the rows.
 
 
 
