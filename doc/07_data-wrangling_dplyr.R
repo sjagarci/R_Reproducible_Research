@@ -5,15 +5,15 @@
 #install.packages("tidyverse") # includes the dplyr package
 library(tidyverse) 
 # loads dplyr, readr, forcats, purrr, tibble, tidyr, lubridate, ggplot2, stringr
-??dplyr
-??readr
-??forcats
-??purrr
-??tibble
-??tidyr
-??lubridate
-??ggplot2
-??stringr
+?dplyr
+?readr
+?forcats
+?purrr
+?tibble
+?tidyr
+?lubridate
+?ggplot2
+?stringr
 
 #install.packages("gapminder")
 library(gapminder)
@@ -363,3 +363,62 @@ browseVignettes("dplyr")
 # conflicts_prefer(dplyr::lag)
 
 # NOTES FROM VIDEO LECTURE 2026-03-05
+## using "OR" operator; can also use membership operator %in% (suggested over OR)
+### using "|" OR operator
+gapminder %>% 
+  filter(continent == "Europe" | continent == "Africa")
+
+### using membership operator %in% 
+conflicts_prefer(dplyr::filter) #set a preference for dplyr filter
+gapminder %>% 
+  filter(continent %in% c("Africa", "Europe"))
+
+### enhance the above code and further filter by lifeExp > 60
+### no shortcut for %in% (manually must be written)
+gapminder %>% 
+  filter(continent %in% c("Africa", "Europe"), lifeExp > 60)
+
+# create a data frame for each country/continent using group_by()
+gapminder %>% 
+  group_by(continent) #shows that data has been grouped by 5 continents
+
+# group_by() and summarize()
+?group_by
+
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(mean_pop = mean(pop), 
+            mean_lifeExp = mean(lifeExp), 
+            mean_gdp = mean(gdpPercap))
+
+## review other variables that can be used to group_by()
+colnames(gapminder)
+
+gapminder %>% 
+  group_by(country) %>% 
+  summarize(median_lifeExp = median(lifeExp))
+
+# ungroup(); remove grouping variable 
+?ungroup()
+ungroup() #reset all groupings
+
+# mutate(): create a new variable/column 
+## multiply lifeExp by 1.5
+gapminder %>% 
+  mutate(scaled_lifeExp = lifeExp * 1.5)
+
+#### MAKE SURE TO ALWAYS NAME THE NEW VARIABLE YOU ARE CREATING 
+#### e.g: lifeExp is replaced with lifeExp * 1.5 (NOT WHAT YOU WANT TO DO)
+####      gapminder %>% 
+####      mutate(lifeExp = lifeExp * 1.5) 
+
+gapminder %>% 
+  filter(continent == "Americas", year == 2007)
+
+## use filter() and ggplot()
+gapminder %>% 
+  filter(continent == "Asia") %>% 
+  ggplot(aes(x = year, y = lifeExp)) +
+  geom_line() + 
+  facet_wrap(~ country)
+
