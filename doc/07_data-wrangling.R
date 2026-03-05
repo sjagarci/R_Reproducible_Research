@@ -351,7 +351,8 @@ gapminder %>%
 
 install.packages("conflicted")
 library(conflicted)
-library(dplyr) # similar functions used
-library(stats) # similar functions used
+browseVignettes("dplyr")
+#library(dplyr) # similar functions used
+#library(stats) # similar functions used
 # Declare which package wins for specific functionsconflicts_prefer(dplyr::filter)
 # conflicts_prefer(dplyr::lag)
