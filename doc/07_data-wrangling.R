@@ -1,5 +1,5 @@
 # Title: Data Wrangling
-# Date: March 3, 2026
+# Date: March 3-5, 2026
 # Author: Stephanie J. Garcia
 
 #install.packages("tidyverse") # includes the dplyr package
@@ -33,13 +33,15 @@ smaller_gapminder_data <- select(gapminder, -continent)
 head(smaller_gapminder_data) #1704 obs, 5 vars: country, year, lifeExp, pop, gdpPercap
 
 ### pipe operator shortcut: ctrl + shift + M
-year_country_gdp1 <- gapminder %>% select(year, country, gdpPercap)
+year_country_gdp1 <- gapminder %>% 
+  select(year, country, gdpPercap)
 str(year_country_gdp1)
 
 # Renaming data frame columns in dplyr 
 ## base R uses names() function to rename columns 
 ### rename(new_name = old_name)
-tidy_gdp <- year_country_gdp1 %>% rename(gdp_per_cap = gdpPercap)
+tidy_gdp <- year_country_gdp1 %>% 
+  rename(gdp_per_cap = gdpPercap)
 head(tidy_gdp)
 
 ## filter() for European countries only 
@@ -242,6 +244,9 @@ gapminder %>%
   facet_wrap(vars(country)) + 
   theme_minimal()
 
+?substr()
+#substr(country, 1, 1) start at the first letter, end at the first letter
+
 ## mutate() and ggplot2 package using dplyr starts_with
 AZ_lifeExp <- gapminder %>% 
   #extract first letter of country name into new column 
@@ -261,9 +266,9 @@ AZ_lifeExp
 #                     continent names in reverse order. HINT: Use the dplyr 
 #                     functions arrange() and sample_n(), they have similar 
 #                     syntax to other dplyr functions. 
-??arrange() #a function used for ordering
-??sample_n() #a function used for sampling 
-??slice_sample()
+?arrange() #a function used for ordering
+?sample_n() #a function used for sampling which is superceded by slice_sample()
+?slice_sample() # randomly select rows 
 
 avg_lifeExp_rando_countries <- gapminder %>% 
   filter(year == 2002) %>% #keep 2002 data only
@@ -356,3 +361,5 @@ browseVignettes("dplyr")
 #library(stats) # similar functions used
 # Declare which package wins for specific functionsconflicts_prefer(dplyr::filter)
 # conflicts_prefer(dplyr::lag)
+
+# NOTES FROM VIDEO LECTURE 2026-03-05
