@@ -105,11 +105,55 @@ all.equal(gap_normal, gapminder_data)
 head(gap_normal)
 head(gapminder_data)
 
+# Intermediate: long to intermediate format before we go all the way wide 
 gap_normal <- gap_normal %>% 
   arrange(country, year)
 all.equal(gap_normal, gapminder_data)
 
+# convert all the way back to wide
+gap_temp <- gap_long_clean %>% 
+  unite(var_ID, continent, country, sep = "_")
+str(gap_temp)
 
+# single ID vairable with combination of continet, country, and defined var names
+gap_temp <- gap_long_clean %>% 
+  unite(ID_var, continent, country, sep = "_") %>% 
+  unite(var_names, obs_type, year, sep = "_")
+str(gap_temp) # ready to be piped into pivot_wider()
 
+gap_wide_new <- gap_long_clean %>% 
+  unite(ID_var, continent, country, sep = "_") %>% 
+  unite(var_names, obs_type, year, sep = "_") %>% 
+  pivot_wider(names_from = var_names, values_from = obs_values)
+str(gap_wide_new)
+
+# Challenge 3: Take this 1 step further and create a gap_ludicrously_wide format
+##             data by pivoting over countries, year and the 3 metrics? 
+##             HINT: this new data frame should only have 5 rows. 
+
+gap_ludicrously_wide <- gap_long_clean %>% 
+  unite(var_names, obs_type, year, country, sep = "_") %>% 
+  pivot_wider(names_from = var_names, values_from = obs_values)
+str(gap_ludicrously_wide)
+view(gap_ludicrously_wide)
+
+# Let's rework the ID variable so that it is more usable
+## Currently ID variable has gdpPercap_year_country
+gap_wide_betterID <- separate(gap_wide_new, ID_var, 
+                              c("continent", "country"), 
+                              sep = "_")
+gap_wide_betterID <- gap_long_clean %>% 
+  unite(ID_var, continent, country, sep = "_") %>% 
+  unite(var_names, obs_type, year, sep = "_") %>% 
+  pivot_wider(names_from = var_names, values_from = obs_values) %>% 
+  separate(ID_var, c("continent", "country"), sep = "_")
+str(gap_wide_betterID)
+
+all.equal(gapminder_wide, gap_wide_betterID)
+
+# KEY POINTS: 
+## Use tidyr package to change the layout of data frames
+## Use pivot_longer() to go from wide to longer layout
+## Use pivot_wider() to go from long to wider format 
 
 

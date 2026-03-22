@@ -192,7 +192,7 @@ calcGDP(head(gapminder)) # not very informative, gives gdp all country & years?
 
 ## adding more arguments, to produce gdp extract per year, per country 
 
-# Function to calculate GDP for given year and/or country
+# Function to calculate GDP for given year and/or country (base R, more complex)
 calcGDP_yrcountry <- function(dat, year = NULL, country = NULL) {
   if(!is.null(year)) {
     dat <- dat[dat$year %in% year, ] # selects those rows with year data
@@ -275,9 +275,18 @@ calGDP_new(gapminder, Year = , Country = "New Zealand")
 ##               function is done, it is done, it is not saved in your environment
 
 # SCOPING RULES: How does R locate an object? 
-## Local environment: inside function 
-## Enclosing environment: if a function is inside another function - looks here first
-### e.g. filter (dplyr function) search within the function where it is defined, 
-### if it does not exist here, go to global environment, if not search the package 
-## Global environment 
-## Packages 
+## The general order in which R locates an object is as follows:
+## Local (Function) Environment: R first looks in the function's own specific 
+##    environment for variables defined within that function call.
+## Enclosing Environments: If the object is not found locally, R searches the 
+##    parent environment where the function was defined. This process continues 
+##    up the chain of parent environments (the "enclosing environments").
+## Global Environment: The search continues up the chain until it reaches the 
+##    top-level, which is typically the Global Environment (your workspace).
+## Search Path (Attached Packages): If not found in the global environment, R 
+##    then searches the namespaces of packages that are currently attached to 
+##    the session (you can see this list with the search() function). The base 
+##    package is always the last on this list.
+## Empty Environment: The search ends at the special, empty environment. If the 
+##    object is still not found, an error is raised.
+
