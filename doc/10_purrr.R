@@ -23,7 +23,8 @@ filenames <- dir("data/", pattern = "_torn.csv", full.names = TRUE)
 
 # For each name in the vector, read it and make a dataframe out of it 
 tornado_data_list <- map(.x = filenames, # .x signifies one item in our list of filenames)
-                         .f = ~ read.csv(file = .x, stringsAsFactors = FALSE)
+                         .f = ~ read.csv(file = .x, 
+                                         stringsAsFactors = FALSE)
                          )
 
 # Review output of map() statement 
@@ -53,6 +54,7 @@ safe_model_output <- map(.x = tornado_data_list,
 safe_model_output[[1]]
 
 # Use transpose() to invert the output of safe_model
+## Combine all results in one list; combines all errors in one list 
 transposed <- transpose(safe_model_output) # lists 10/11 with no errors -- issue with df 7
 
 #successful_model <- safe_model_output %>% 
@@ -69,6 +71,7 @@ tornado_data_list[[7]]$mag %>%
   unique() # cheeseburger included as a "y" response
 
 ## Discard the df that does not have the outcome in format needed
+## Use DISCARD to search RESULTS that shows NULL, in this case, #7 is NULL 
 discard(transposed$result, is.null) #discard item #7 that had null value 
 
 ## 4. Filter the data for each data frame separately, then combine into single df
@@ -162,3 +165,44 @@ walk2(
   )
 )
 
+### Version of safely plot discussed during video lecture 03-26-2026
+safe_plot2 <- safely(
+  ~ggplot(.x) +
+    geom_boxplot(
+      aes(group = yr,
+          y = loss)
+    ), 
+  otherwise = NULL
+)
+
+plot_test2 <- map(
+  .x = tornado_by_state, 
+  .f = safe_plot2
+)
+
+### No errors, we can pluck out the results only, and discard errors
+plot_results <- plot_test %>% 
+  transpose() %>% 
+  pluck("result")
+
+### Example plot for state of FL 
+plot_results$FL
+
+### A function to iterate across all states of the dfs to save a .png for boxplot
+### map2() maps two different lists
+###        must ensure that all of the vectors are the same length 
+length(names(tornado_by_state)) # 51 states included 
+length(plot_results) # 51 plots created 
+
+#map2(
+#  .x = names(tornado_by_state),
+#  .y = plot_results, 
+#  .f = ~ggsave(
+#    filename = paste0("figures/", .x, "tornado_plots.png"),
+#    plot = .y,
+#    device = "png",
+#    width = 8,
+#    height = 6, 
+#    units = "in"
+#  )
+#)
