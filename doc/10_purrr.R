@@ -36,8 +36,8 @@ tornado_data_list # review all of them
 
 # Iteratively performing analysis: run a linear model for all 11 data frames
 ## We'll model tornado ratio (mag) as a function of estimated property loss (loss)
-map(.x = tornado_data_list,
-    .f = ~ lm(formula = mag ~ loss, data = .x)) # ERRORS
+#map(.x = tornado_data_list,
+#    .f = ~ lm(formula = mag ~ loss, data = .x)) # ERRORS
 ## 3. Cover how to handle errors while iterating over lists 
 
 # Purrr has functions that allows us to continue pushing through past errors
@@ -116,8 +116,45 @@ tornado_by_state_alt <-
   split(x = tornado_summary,
         f = tornado_summary$st) # split by state 
 
+length(tornado_by_state)
+length(tornado_by_state_alt)
+
 ## 6. Plot and export .png files for many figures all at once 
 
+## Define plotting function 
 
+safe_plot <- function(data) {
+  # Validate that required columns exist
+  if (!all(c("yr", "loss") %in% names(data))) {
+    stop("Data must contain 'yr' and 'loss' columns.")
+  }
+  
+  ggplot(data, 
+         aes(x = factor(yr), y = loss)) +
+  geom_boxplot(na.rm = TRUE) + # Remove NA values safely
+  labs(x = "Year", 
+       y = "Loss",
+       title = "Loss Distribution by Year") + 
+  theme_minimal()
+}
 
+plot_test <- map(tornado_by_state, safely(safe_plot))
+
+# Ensure results folder exists
+if (!dir.exists("results")) {
+  dir.create("results")
+}
+
+# Save each plot with a unique filename
+walk2(
+  .x = plot_test,
+  .y = paste0("results/tornado_plot", names(plot_test), ".png"),
+  ~ ggsave(
+    filename = .y,
+    plot = .x,
+    width = 6,
+    height = 4,
+    dpi = 300
+  )
+)
 
