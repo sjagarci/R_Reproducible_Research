@@ -117,7 +117,9 @@ tornado_by_state_alt <-
         f = tornado_summary$st) # split by state 
 
 length(tornado_by_state)
+names(tornado_by_state)
 length(tornado_by_state_alt)
+names(tornado_by_state_alt)
 
 ## 6. Plot and export .png files for many figures all at once 
 
@@ -146,6 +148,8 @@ if (!dir.exists("results")) {
 }
 
 # Save each plot with a unique filename
+## Use names(plot_test) to save the file name with the name of state
+## Use seq_along(plot_test) to save files in sequential order 1 - 51
 walk2(
   .x = plot_test,
   .y = paste0("results/tornado_plot", names(plot_test), ".png"),
