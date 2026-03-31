@@ -1,0 +1,78 @@
+---
+title: "Introduction to RMarkdown"
+author: "Stephanie Garcia"
+date: "2026-03-31"
+output:
+  html_document: default
+---
+
+# Introduction
+
+Introduction to RMarkdown.
+
+## Subheading 1
+
+This time tomorrow
+
+## Subheading 2
+
+### Subheading 2.1
+
+### Subheading 2.2
+
+# Create Unordered List
+
+-   List 1
+-   List 2
+-   List 3
+
+# Create an Ordered List
+
+1.  List 1
+2.  List 2
+3.  List 3
+
+# R for Reproducible Data Science
+
+# Links
+
+The link to the course material is [here](https://swcarpentry.github.io/r-novice-gapminder/14-knitr-markdown.html)
+
+# Images
+
+## From a website: 
+![Stillness](https://www.psdstack.com/wp-content/uploads/2019/08/copyright-free-images-750x420.jpg)
+
+## From my own directory: ERRORS HERE
+
+![Life Expectancy Boxplot]("C:\Users\sjagarci\OneDrive - Florida International University\FIU-STATCONSULT\TRAINING\Professional Development\R-for-Reproducible-Research\R_Reproducible_Research\results\lifeExp_boxplot.png")
+
+# Adding a code and Results of the Code (shortcut: ctrl + alt + i)
+
+## Components of code chunks: 
+1. define the language and options in {language, options}
+
+```{r, LoadLibraries}
+library(tidyverse)
+
+```
+
+Loading Data for demonstration purposes. 
+
+```{r, LoadData}
+gapminder_data <- read_csv("C:/Users/sjagarci/OneDrive - Florida International University/FIU-STATCONSULT/TRAINING/Professional Development/R-for-Reproducible-Research/R_Reproducible_Research/data/gapminder_data.csv")
+head(gapminder_data)
+```
+
+Loading a graph created in previous class discussions. More specifically, 
+Challenge 4: Modify points to different shapes and color by continent with trendline. 
+Use color argument inside aes (since this maps to variables). 
+
+```{r}
+ggplot(data = gapminder_data) + 
+  aes(x = gdpPercap, y = lifeExp, colour = continent) +
+  geom_point(shape = 18) + scale_x_log10() + 
+  geom_smooth(method = "lm", linewidth = 1.5)
+```
+
+
